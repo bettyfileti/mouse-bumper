@@ -1,14 +1,24 @@
 body{
   background-color: #000000;
+  color: #6495ED;
+  font-family: 'Luckiest Guy', sans-serif;
+}
+
+h1{
+  padding-top: 80px;
+  text-align: center;
+  font-size: 48px;
 }
 
 /* -------------------------------------------------------------- */
 /* IDs */
+#container{
+}
+
 #canvas-container{
     display: flex;
     justify-content: center;
     align-items:center;
-    height: 100vh;
 }
 
 #canvas-container canvas{

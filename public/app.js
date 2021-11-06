@@ -11,7 +11,8 @@ socket.on("draw-data", data => {
 });
 
 socket.on("getMySocketId", data => {
-  myMouseID = data;
+  myMouseID = data.clientID;
+  colorID = data.clientCount % 8;
 });
 
 socket.on("clientLeft", data => {
@@ -34,6 +35,7 @@ let mouseYellow;
 
 let myMouse;
 let myMouseID;
+let colorID;
 let myMouseArray = [];
 let mouseCursors = [];
 let mouseImages = [];
@@ -55,21 +57,21 @@ function preload() {
   mouseYellow = loadImage("assets/cursorYellow.png");
 
   mouseImages.push(
+    mouseRed,
     mouseAqua,
+    mouseOrange,
     mouseBlue,
     mouseGreen,
-    mouseOrange,
     mousePink,
-    mousePurple,
-    mouseRed,
-    mouseYellow
+    mouseYellow,
+    mousePurple
   );
 }
 
 function setup() {
   let myCanvas = createCanvas(400, 400);
   background(220);
-
+  
   myCanvas.parent("canvas-container");
 
   let margin = 0;
@@ -81,7 +83,7 @@ function setup() {
   };
 
   //load new players in at origin and have them slowly meet the user's cursor
-  let colorID = int(random(mouseImages.length));
+  //let colorID = int(random(mouseImages.length));
 
   myMouse = new MouseCursor(
     width/2,
@@ -99,6 +101,11 @@ function setup() {
 function draw() {
   sendThisMouseData();
   rect(rectCanvas.x, rectCanvas.y, rectCanvas.w, rectCanvas.h);
+  
+    push();
+  noFill();
+  ellipse(mouseX, mouseY, 10, 10);
+  pop();
   
   for (let mouse of myMouseArray) {
     mouse.checkControl();

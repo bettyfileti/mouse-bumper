@@ -7,6 +7,7 @@ app.use("/", express.static("public"));
 let http = require("http");
 let server = http.createServer(app);
 let port = process.env.PORT || 3000;
+
 server.listen(port, () => {
   console.log("Server is listening at: " + port);
 });
@@ -14,12 +15,19 @@ server.listen(port, () => {
 //socket connection
 let io = require("socket.io");
 io = new io.Server(server);
+let clientCount = 0;
 
 
 io.sockets.on("connection", socket => {
   console.log("We have a new client: " + socket.id);
+  clientCount ++;
   
-  socket.emit("getMySocketId", socket.id);
+  let newClientData = {
+    clientID : socket.id,
+    clientCount : clientCount
+  }
+  
+  socket.emit("getMySocketId", newClientData);
 
   //Receive updated array
   socket.on("weHaveNewMouseData", data => {

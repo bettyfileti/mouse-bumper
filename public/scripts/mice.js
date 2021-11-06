@@ -60,11 +60,13 @@ class MouseCursor {
       let minDistance = 24;
 
       if (distance < minDistance) {
-        this.bump = true;
         imBeingBumpedBy = mice.ID;
+        this.bump = true;
+        this.userHasControl = false;
         return;
       } else if (distance > minDistance && this.bump != true) {
-        this.bump = false;
+        this.userHasControl = false;
+        //this.bump = false; //= false;
       }
     }
 
@@ -73,32 +75,6 @@ class MouseCursor {
   }
 
   update() {
-    if (this.bump) {
-      //if it's the other mouse that's moving, then we need to calculate this with the mice.ID's value
-      let otherMouse = mouseCursors.find(x => x.ID === imBeingBumpedBy);
-
-      //if my mouse is the one moving, this works
-      //let mouseToMoveAway = createVector(mouseX, mouseY);
-      //let mouseToTarget = createVector(this.x, this.y);
-
-      let mouseToMoveAway = createVector(otherMouse.x, otherMouse.y);
-      let mouseToTarget   = createVector(mouseX, mouseY);
-      
-      //creates a faux target to send mouse towards outside of the mouse region
-      let newVector = createVector(mouseToMoveAway.x, mouseToMoveAway.y);
-      let distanceVect = createVector(mouseToMoveAway.x - mouseToTarget.x, mouseToMoveAway.y - mouseToTarget.y);
-      //console.log(distanceVect);
-      distanceVect.normalize();
-      distanceVect.mult(48);
-      newVector.sub(distanceVect);
-
-      let newMousePos = bumpMouse(mouseToTarget, newVector);
-      // let newMousePos = bumpMouse(mouseToMoveAway, newVector);
-      this.x = newMousePos.x;
-      this.y = newMousePos.y;
-      mouseX = this.x;
-      mouseY = this.y;
-    }
 
     if (
       mouseX <= -10 ||
@@ -128,9 +104,37 @@ class MouseCursor {
     } else {
       this.pos = createVector(this.x, this.y);
 
-      //if we're bouncing then do this...
-      if (this.wallBounce) {
-        
+      if (this.bump) {
+        //if we're bouncing another mouse, then do this...
+        let otherMouse = mouseCursors.find(x => x.ID === imBeingBumpedBy);
+        let mouseToMoveAway = createVector(otherMouse.x, otherMouse.y);
+        let mouseToTarget = createVector(mouseX, mouseY);
+
+        //creates a faux target to send mouse towards outside of the mouse region
+        let newVector = createVector(mouseToMoveAway.x, mouseToMoveAway.y);
+        let distanceVect = createVector(
+          mouseToMoveAway.x - mouseToTarget.x,
+          mouseToMoveAway.y - mouseToTarget.y
+        );
+
+        distanceVect.normalize();
+        distanceVect.mult(48 * 1.5);
+        newVector.sub(distanceVect);
+
+        // push();
+        // textSize(20);
+        // fill("green");
+        // text("newVector", newVector.x, newVector.y);
+        // pop();
+
+        let newMousePos = bumpMouse(mouseToTarget, newVector);
+        this.x = newMousePos.x;
+        this.y = newMousePos.y;
+        mouseX = this.x;
+        mouseY = this.y;
+      } else if (this.wallBounce) {
+        //if we're bouncing off the wall then do this...
+
         //"bounce" off the edge by pulling towards center canvas
         this.target = createVector(width / 2, height / 2);
         let distance = this.target.dist(this.pos);
@@ -149,16 +153,19 @@ class MouseCursor {
           this.y = this.pos.y;
         }
       } else {
-        this.target = createVector(mouseX, mouseY);
-        let distance = this.target.dist(this.pos);
-        let mappedDistance = map(distance, 100, 0, 8, 0.5);
+        //if (this.x != mouseX && this.y != mouseY){
+          this.target = createVector(mouseX, mouseY);
+          let distance = this.target.dist(this.pos);
+          let mappedDistance = map(distance, 100, 0, 25, 0.5); 
+  
+          this.target.sub(this.pos);
+          this.target.normalize();
+          this.target.mult(mappedDistance);
+          this.pos.add(this.target);
+          this.x = this.pos.x;
+          this.y = this.pos.y;
+        //}
 
-        this.target.sub(this.pos);
-        this.target.normalize();
-        this.target.mult(mappedDistance);
-        this.pos.add(this.target);
-        this.x = this.pos.x;
-        this.y = this.pos.y;
       }
     }
   }
@@ -168,7 +175,7 @@ class MouseCursor {
 
   show() {
     image(this.color, this.x - 5, this.y, 24, 24);
-    
+
     // Helpful for testing
     // textSize(10);
     // text(this.ID, this.x, this.y);
@@ -179,9 +186,8 @@ class MouseCursor {
 //
 
 function bumpMouse(mouseToMoveAway, mouseToTarget) {
-  
   let distance = mouseToMoveAway.dist(mouseToTarget);
-  let mappedDistance = map(distance, 0, 48, 48, 0);
+  let mappedDistance = map(distance, 0, 48, 0, 4);
 
   mouseToMoveAway.sub(mouseToTarget);
   mouseToMoveAway.normalize();

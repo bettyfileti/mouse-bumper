@@ -8,34 +8,31 @@ let http = require("http");
 let server = http.createServer(app);
 let port = process.env.PORT || 3000;
 server.listen(port, () => {
-    console.log("Server is listening at: " + port);
+  console.log("Server is listening at: " + port);
 });
 
 //socket connection
 let io = require("socket.io");
 io = new io.Server(server);
 
-//socket connection
-io.sockets.on("connection", (socket) => {
-    console.log("We have a new client: " + socket.id);
 
-    socket.on("disconnect", ()=> {
-        console.log("Client disconnected: " + socket.id);
-    });
+io.sockets.on("connection", socket => {
+  console.log("We have a new client: " + socket.id);
+  
+  socket.emit("getMySocketId", socket.id);
 
-    //listen for data
-    socket.on("data", (data) => {
-        //console.log(data)
-        
-        //send to all clients, including myself
-        io.sockets.emit("draw-data", data);
+  //Receive updated array
+  socket.on("weHaveNewMouseData", data => {
+  
+    socket.broadcast.emit('draw-data', data); //send to all, except me
+    //io.sockets.emit("draw-data", data); //send to all, including me
+  });
+  
+  //will need a socket for if the data disappears/user exits? 
 
-        // //send to all clients, except me
-        // socket.broadcast.emit('draw-data', data);
+  socket.on("disconnect", () => {
+    socket.broadcast.emit("clientLeft", socket.id);
+    console.log("Client disconnected: " + socket.id);
+  });
 
-        // //send the data to just this client
-        // socket.emit('data', data);
-
-    });
 });
-

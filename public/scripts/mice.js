@@ -1,5 +1,5 @@
 class MouseCursor {
-  constructor(x, y, randomColor, colorID, myID, bump) {
+  constructor(x, y, randomColor, colorID, myID) {
     (this.x = x),
       (this.y = y),
       (this.color = randomColor),
@@ -8,8 +8,9 @@ class MouseCursor {
       (this.target = undefined),
       (this.pos = undefined),
       (this.wallBounce = false),
-      (this.bump = bump),
-      (this.ID = myID);
+      (this.bump = undefined),
+      (this.ID = myID),
+      (this.index = undefined);
   }
 
   //--------------------------------------------------------------
@@ -49,11 +50,52 @@ class MouseCursor {
     }
   }
 
+  checkCollision() {
+    this.bump = undefined;
+
+    for (let mice of mouseCursors) {
+      let otherMice = createVector(mice.x, mice.y);
+      let myMouse = createVector(this.x, this.y); //was mouseX, mouseY
+      let distance = otherMice.dist(myMouse);
+      let minDistance = 24;
+
+      if (distance < minDistance) {
+        this.bump = true;
+        imBeingBumpedBy = mice.ID;
+        return;
+      } else if (distance > minDistance && this.bump != true) {
+        this.bump = false;
+      }
+    }
+
+    //good for testing;
+    // line(this.x, this.y, mouseX, mouseY);
+  }
+
   update() {
-    
-    if (imBeingBumped) {
-      this.x = mouseBumpX;
-      this.y = mouseBumpY;
+    if (this.bump) {
+      //if it's the other mouse that's moving, then we need to calculate this with the mice.ID's value
+      let otherMouse = mouseCursors.find(x => x.ID === imBeingBumpedBy);
+
+      //if my mouse is the one moving, this works
+      //let mouseToMoveAway = createVector(mouseX, mouseY);
+      //let mouseToTarget = createVector(this.x, this.y);
+
+      let mouseToMoveAway = createVector(otherMouse.x, otherMouse.y);
+      let mouseToTarget   = createVector(mouseX, mouseY);
+      
+      //creates a faux target to send mouse towards outside of the mouse region
+      let newVector = createVector(mouseToMoveAway.x, mouseToMoveAway.y);
+      let distanceVect = createVector(mouseToMoveAway.x - mouseToTarget.x, mouseToMoveAway.y - mouseToTarget.y);
+      //console.log(distanceVect);
+      distanceVect.normalize();
+      distanceVect.mult(48);
+      newVector.sub(distanceVect);
+
+      let newMousePos = bumpMouse(mouseToTarget, newVector);
+      // let newMousePos = bumpMouse(mouseToMoveAway, newVector);
+      this.x = newMousePos.x;
+      this.y = newMousePos.y;
       mouseX = this.x;
       mouseY = this.y;
     }
@@ -122,52 +164,31 @@ class MouseCursor {
   }
 
   //--------------------------------------------------------------
-  //Other Client's Mice
-  
-  checkCollision() {
-    this.pos = createVector(this.x, this.y);
-
-    let distance = dist(this.pos.x, this.pos.y, mouseX, mouseY);
-    let minDistance = 24;
-
-    if (distance < minDistance) {
-      imBeingBumpedBy = this.ID;
-      this.bump = true;
-      console.log(this.ID, "was set to this.bump = true");
-    } 
-    //good for testing;
-    line(this.pos.x, this.pos.y, mouseX, mouseY);
-  }
-
-  updateBounce() {
-    if (this.bump) {
-      let mouseToMoveAway = createVector(mouseX, mouseY);
-      let mouseToTarget = createVector(this.x, this.y);
-      let distance = mouseToMoveAway.dist(mouseToTarget);
-      let mappedDistance = map(distance, 24, 0, 24, 25);
-
-      mouseToMoveAway.sub(mouseToTarget); //change to add? or negative?
-      mouseToMoveAway.normalize();
-      mouseToMoveAway.mult(mappedDistance);
-      mouseToTarget.add(mouseToMoveAway);
-      mouseBumpX = mouseToTarget.x;
-      mouseBumpY = mouseToTarget.y;
-
-      push();
-      fill(0, 255, 0, 100);
-      ellipse(mouseToTarget.x, mouseToTarget.y, 10);
-      pop();
-    }
-  }
-
-  //--------------------------------------------------------------
   //Both sets of mice
 
   show() {
     image(this.color, this.x - 5, this.y, 24, 24);
-    textSize(10);
-    text(this.ID, this.x, this.y);
+    
+    // Helpful for testing
+    // textSize(10);
+    // text(this.ID, this.x, this.y);
   }
+}
+
+//--------------------------------------------------------------
+//
+
+function bumpMouse(mouseToMoveAway, mouseToTarget) {
+  
+  let distance = mouseToMoveAway.dist(mouseToTarget);
+  let mappedDistance = map(distance, 0, 48, 48, 0);
+
+  mouseToMoveAway.sub(mouseToTarget);
+  mouseToMoveAway.normalize();
+  mouseToMoveAway.mult(mappedDistance);
+  mouseToTarget.add(mouseToMoveAway);
+
+  return mouseToTarget;
 }
 
 //Help with vector math here:

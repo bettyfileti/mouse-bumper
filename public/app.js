@@ -88,8 +88,7 @@ function setup() {
     height/2,
     mouseImages[colorID],
     colorID,
-    myMouseID,
-    false
+    myMouseID
   );
 
   myMouseArray.push(myMouse);
@@ -99,19 +98,18 @@ function setup() {
 
 function draw() {
   sendThisMouseData();
-  //console.log("imBeingBumped", imBeingBumped);
   rect(rectCanvas.x, rectCanvas.y, rectCanvas.w, rectCanvas.h);
   
   for (let mouse of myMouseArray) {
     mouse.checkControl();
+    mouse.checkCollision();
     mouse.update();
     mouse.show();
   }
 
   if (weHaveTheMice) {
     for (let mice of mouseCursors) {
-      mice.checkCollision();
-      mice.updateBounce();
+      //mice.checkCollision();
       mice.show();
     }
   }
@@ -161,8 +159,7 @@ function createNewMouseObject(data){
       data.yPos,
       mouseImages[data.colorID],
       data.colorID,
-      data.myID,
-      data.bounce
+      data.myID
     );
   return thisMouse;
 }
@@ -193,8 +190,7 @@ function sendThisMouseData() {
         xPos: mouse.x,
         yPos: mouse.y,
         colorID: mouse.colorID,
-        myID: mouse.ID,
-        bounce: mouse.bounce
+        myID: mouse.ID
       };
       //console.log("sending to server:", dataObj);
       socket.emit("weHaveNewMouseData", dataObj);

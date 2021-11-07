@@ -36,6 +36,11 @@ io.sockets.on("connection", socket => {
     //io.sockets.emit("draw-data", data); //send to all, including me
   });
   
+  //Receive updated points
+  socket.on("weHaveUpdatedPoints", data => {
+    io.sockets.emit('draw-points', data)
+  });
+  
   //will need a socket for if the data disappears/user exits? 
 
   socket.on("disconnect", () => {

@@ -1,28 +1,84 @@
-body{
-  background-color: #000000;
+body {
+  background-color: #ffffff;
   color: #6495ED;
-  font-family: 'Luckiest Guy', sans-serif;
+  font-family: "Luckiest Guy", sans-serif;
+  margin: 0;
+  height: 100%;
+  overflow: hidden;
 }
 
-h1{
-  padding-top: 80px;
+h1 {
+  background-color: #ffffff;
   text-align: center;
   font-size: 48px;
+  width: 100vw;
+  padding: 32px 0 24px 0;
+  
+  overflow: hidden;
+  position: fixed; 
+  top: -32px; 
+  
+}
+
+p {
+  font-family: sans-serif;
+  color: #ffffff;
+  font-size: 24px;
+}
+
+/* -------------------------------------------------------------- */
+/* Classes */
+.points-box{
+  padding: 16px;
+}
+
+.points-text {
+  font-family: sans-serif;
+  color: #ffffff;
+  font-size: 24px;
+  text-align: center;
 }
 
 /* -------------------------------------------------------------- */
 /* IDs */
-#container{
+#container {  
+  /*   https://www.magicpattern.design/tools/css-backgrounds */
+  background-color: #f3f3ff;
+  opacity: 1;
+  background-image: radial-gradient(circle at center center, #30d7b5, #f3f3ff),
+    repeating-radial-gradient(
+      circle at center center,
+      #30d7b5,
+      #30d7b5,
+      23px,
+      transparent 46px,
+      transparent 23px
+    );
+  background-blend-mode: multiply;
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding-top: 88px;
 }
 
-#canvas-container{
-    display: flex;
-    justify-content: center;
-    align-items:center;
+#canvas-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
-#canvas-container canvas{
-    border: 4px solid violet;
-    margin: 24px 0 24px 0;
-    cursor: none;
+#canvas-container canvas {
+  border: 4px solid violet;
+  margin: 40px 0 24px 0;
+  cursor: none;
+}
+
+#points-container {
+  background-color: #000000;
+  display: flex;
+  justify-content: space-evenly;
+  max-width: 800px;
+  padding: 24px 40px 0px 40px;
 }

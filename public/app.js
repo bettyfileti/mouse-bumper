@@ -10,6 +10,10 @@ socket.on("draw-data", data => {
   createMouseObjects(data);
 });
 
+socket.on("draw-points", data => {
+  drawPoints(data);
+});
+
 socket.on("getMySocketId", data => {
   myMouseID = data.clientID;
   colorID = data.clientCount % 8;
@@ -39,7 +43,24 @@ let colorID;
 let myMouseArray = [];
 let mouseCursors = [];
 let mouseImages = [];
+let mouseImagePaths = ["assets/cursorRed.png",
+                       "assets/cursorAqua.png",
+                       "assets/cursorOrange.png",
+                       "assets/cursorBlue.png",
+                       "assets/cursorGreen.png",
+                       "assets/cursorPink.png",
+                       "assets/cursorYellow.png",
+                       "assets/cursorPurple.png"]
 
+let img = document.createElement("img");
+let imgContainer0;
+let imgContainer1;
+let imgContainer2;
+let imgContainer3;
+let imgContainer4;
+let imgContainer5;
+let imgContainer6;
+let imgContainer7;
 let weHaveTheMice = false;
 let imBeingBumpedBy;
 let imBeingBumped;
@@ -66,9 +87,19 @@ function preload() {
     mouseYellow,
     mousePurple
   );
+  
+  imgContainer0 = document.getElementById(`mouse-0-img`);
+  imgContainer1 = document.getElementById(`mouse-1-img`);
+  imgContainer2 = document.getElementById(`mouse-2-img`);
+  imgContainer3 = document.getElementById(`mouse-3-img`);
+  imgContainer4 = document.getElementById(`mouse-4-img`);
+  imgContainer5 = document.getElementById(`mouse-5-img`);
+  imgContainer6 = document.getElementById(`mouse-6-img`);
+  imgContainer7 = document.getElementById(`mouse-7-img`);
 }
 
 function setup() {
+  
   let myCanvas = createCanvas(400, 400);
   background(220);
   
@@ -90,19 +121,27 @@ function setup() {
     height/2,
     mouseImages[colorID],
     colorID,
-    myMouseID
+    myMouseID,
+    0
   );
 
   myMouseArray.push(myMouse);
   sendThisMouseData();
   console.log(myMouseID);
+  
+    let dataObj = {
+    "colorID": colorID,
+    "points" : 0
+  }
+  
+  drawPoints(dataObj);
 }
 
 function draw() {
   sendThisMouseData();
   rect(rectCanvas.x, rectCanvas.y, rectCanvas.w, rectCanvas.h);
   
-    push();
+  push();
   noFill();
   ellipse(mouseX, mouseY, 10, 10);
   pop();
@@ -166,7 +205,8 @@ function createNewMouseObject(data){
       data.yPos,
       mouseImages[data.colorID],
       data.colorID,
-      data.myID
+      data.myID,
+      data.points
     );
   return thisMouse;
 }
@@ -190,6 +230,28 @@ function removeMouseObject(myID) {
 
 //--------------------------------------------------------------
 
+function drawPoints(data){
+  let imgContainer = document.getElementById(`mouse-${data.colorID}-img`);      
+  let imgPath = "./" + str(mouseImagePaths[data.colorID]);
+  imgContainer.src = imgPath;
+
+  let pointsTextContainer = document.getElementById(`points-${data.colorID}-text`);
+  pointsTextContainer.innerHTML = data.points;
+}
+
+//--------------------------------------------------------------
+
+function sendPointsData(){
+  let dataObj = {
+    "colorID": colorID,
+    "points": myMouseArray[0].points
+  }
+  
+  socket.emit("weHaveUpdatedPoints", dataObj);
+}
+
+//--------------------------------------------------------------
+
 function sendThisMouseData() {
   if (myMouseArray.length === 1) {
     for (let mouse of myMouseArray) {
@@ -197,7 +259,8 @@ function sendThisMouseData() {
         xPos: mouse.x,
         yPos: mouse.y,
         colorID: mouse.colorID,
-        myID: mouse.ID
+        myID: mouse.ID,
+        points: mouse.points
       };
       //console.log("sending to server:", dataObj);
       socket.emit("weHaveNewMouseData", dataObj);

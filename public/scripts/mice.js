@@ -1,5 +1,5 @@
 class MouseCursor {
-  constructor(x, y, randomColor, colorID, myID) {
+  constructor(x, y, randomColor, colorID, myID, points) {
     (this.x = x),
       (this.y = y),
       (this.color = randomColor),
@@ -10,6 +10,7 @@ class MouseCursor {
       (this.wallBounce = false),
       (this.bump = undefined),
       (this.ID = myID),
+      (this.points = points),
       (this.index = undefined);
   }
 
@@ -61,6 +62,8 @@ class MouseCursor {
 
       if (distance < minDistance) {
         imBeingBumpedBy = mice.ID;
+        this.points++;
+        sendPointsData();
         this.bump = true;
         this.userHasControl = false;
         return;

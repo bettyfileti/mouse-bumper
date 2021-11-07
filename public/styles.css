@@ -4,7 +4,7 @@ body {
   font-family: "Luckiest Guy", sans-serif;
   margin: 0;
   height: 100%;
-  overflow: hidden;
+/*   overflow: hidden; */
 }
 
 h1 {
@@ -25,6 +25,7 @@ p {
   color: #ffffff;
   font-size: 24px;
 }
+
 
 /* -------------------------------------------------------------- */
 /* Classes */
@@ -61,6 +62,7 @@ p {
   align-items: center;
   justify-content: center;
   padding-top: 88px;
+  overflow: hidden;
 }
 
 #canvas-container {
@@ -82,3 +84,4 @@ p {
   max-width: 800px;
   padding: 24px 40px 0px 40px;
 }
+

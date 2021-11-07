@@ -21,6 +21,7 @@ socket.on("getMySocketId", data => {
 
 socket.on("clientLeft", data => {
   removeMouseObject(data);
+  resetPoints();
 });
 
 //--------------------------------------------------------------
@@ -104,6 +105,7 @@ function setup() {
   background(220);
   
   myCanvas.parent("canvas-container");
+  myCanvas.id = "my-canvas";
 
   let margin = 0;
   rectCanvas = {
@@ -241,6 +243,21 @@ function drawPoints(data){
 
 //--------------------------------------------------------------
 
+function resetPoints(){
+  for (let i = 0; i < mouseImagePaths.length; i++){
+    let imgContainer = document.getElementById(`mouse-${i}-img`);
+    let imgPath = "./assets/cursorEmpty.png";
+    imgContainer.src = imgPath;
+    
+    let pointsTextContainer = document.getElementById(`points-${i}-text`);
+    pointsTextContainer.innerHTML = 0;
+  }
+  
+  sendPointsData();
+}
+
+//--------------------------------------------------------------
+
 function sendPointsData(){
   let dataObj = {
     "colorID": colorID,
@@ -274,3 +291,24 @@ function mouseClicked() {
   console.log("myMouseArray:", myMouseArray);
   console.log("mouseCursors:", mouseCursors);
 }
+
+
+//--------------------------------------------------------------
+//Prevent mobile version from scrolling 
+// https://stackoverflow.com/questions/49854201/html5-issue-canvas-scrolling-when-interacting-dragging-on-ios-11-3/51652248#51652248
+// Prevent scrolling when touching the canvas
+document.body.addEventListener("touchstart", function (e) {
+    if (e.target == canvas) {
+        e.preventDefault();
+    }
+}, { passive: false });
+document.body.addEventListener("touchend", function (e) {
+    if (e.target == canvas) {
+        e.preventDefault();
+    }
+}, { passive: false });
+document.body.addEventListener("touchmove", function (e) {
+    if (e.target == canvas) {
+        e.preventDefault();
+    }
+}, { passive: false });

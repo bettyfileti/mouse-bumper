@@ -1,22 +1,87 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Bumper Mouse</title>
-    <link rel="stylesheet" href="styles.css">
-    <link href="https://fonts.googleapis.com/css2?family=Luckiest+Guy&display=swap" rel="stylesheet">
+
+    <link rel="stylesheet" href="styles.css" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Luckiest+Guy&display=swap" rel="stylesheet" />
 </head>
+
 <body>
     <div id="container">
-        <h1>Bumper Mouse</h1>
+        <h1>
+            BumperMouse
+        </h1>
         <div id="canvas-container"></div>
+        <div id="points-container">
+            <div id="points-0" class="points-box">
+                <div><img id="mouse-0-img" src="./assets/cursorEmpty.png" alt="Empty Mouse Cursor" width="24"></div>
+                <div>
+                    <p id="points-0-text" class="points-text">0</p>
+                </div>
+            </div>
+
+            <div id="points-1" class="points-box">
+                <div><img id="mouse-1-img" src="./assets/cursorEmpty.png" alt="Empty Mouse Cursor" width="24"></div>
+                <div>
+                    <p id="points-1-text" class="points-text">0</p>
+                </div>
+            </div>
+
+            <div id="points-2" class="points-box">
+                <div><img id="mouse-2-img" src="./assets/cursorEmpty.png" alt="Empty Mouse Cursor" width="24"></div>
+                <div>
+                    <p id="points-2-text" class="points-text">0</p>
+                </div>
+            </div>
+
+            <div id="points-3" class="points-box">
+                <div><img id="mouse-3-img" src="./assets/cursorEmpty.png" alt="Empty Mouse Cursor" width="24"></div>
+                <div>
+                    <p id="points-3-text" class="points-text">0</p>
+                </div>
+            </div>
+
+            <div id="points-4" class="points-box">
+                <div><img id="mouse-4-img" src="./assets/cursorEmpty.png" alt="Empty Mouse Cursor" width="24"></div>
+                <div>
+                    <p id="points-4-text" class="points-text">0</p>
+                </div>
+            </div>
+
+            <div id="points-5" class="points-box">
+                <div><img id="mouse-5-img" src="./assets/cursorEmpty.png" alt="Empty Mouse Cursor" width="24"></div>
+                <div>
+                    <p id="points-5-text" class="points-text">0</p>
+                </div>
+            </div>
+
+            <div id="points-6" class="points-box">
+                <div><img id="mouse-6-img" src="./assets/cursorEmpty.png" alt="Empty Mouse Cursor" width="24"></div>
+                <div>
+                    <p id="points-6-text" class="points-text">0</p>
+                </div>
+            </div>
+
+            <div id="points-7" class="points-box">
+                <div><img id="mouse-7-img" src="./assets/cursorEmpty.png" alt="Empty Mouse Cursor" width="24"></div>
+                <div>
+                    <p id="points-7-text" class="points-text">0</p>
+                </div>
+            </div>
+        </div>
     </div>
-    
+
     <script type="text/javascript" src="/socket.io/socket.io.js"></script>
     <script src="./scripts/mice.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.1.9/p5.js"></script>
     <script src="app.js"></script>
 </body>
+
 </html>

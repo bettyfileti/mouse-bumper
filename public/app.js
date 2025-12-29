@@ -73,8 +73,8 @@ function draw(){
 
 function mouseMoved() {
     let dataObj = {
-        "xPos" : mouseCursors[0].x,
-        "yPos" : mouseCursors[0].y,
+        "x" : mouseCursors[0].x,
+        "y" : mouseCursors[0].y,
         "colorID" : mouseCursors[0].colorID,
     }
     socket.emit("data", dataObj);
@@ -88,5 +88,5 @@ function mouseClicked(){
 function drawObj(data) {
     let colorID = data.colorID;
     let newMouse = new MouseCursor(data.x, data.y, mouseImages[colorID], colorID);
-    //By not pushing the new one to an array, can we just have it go through?
+    newMouse.show();
 }

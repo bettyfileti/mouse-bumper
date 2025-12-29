@@ -1,17 +1,28 @@
 {
-  "name": "mousebumpercars",
-  "version": "1.0.0",
-  "description": "",
-  "main": "index.js",
+  "name": "glitch-mvp-node",
+  "version": "0.0.1",
+  "description": "A simple Node app built on fastify, instantly up and running.",
+  "main": "server.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
-    “start”: “node index.js”
+    "start": "node server.js"
   },
-  
-  "author": "",
-  "license": "ISC",
   "dependencies": {
-    "express": "^4.17.1",
-    "socket.io": "^4.3.1"
-  }
+    "fastify": "^4.26.0",
+    "@fastify/formbody": "^7.4.0",
+    "@fastify/static": "^6.12.0",
+    "handlebars": "^4.7.8",
+    "@fastify/view": "^8.2.0"
+  },
+  "engines": {
+    "node": "18.x"
+  },
+  "repository": {
+    "url": "https://glitch.com/edit/#!/glitch-mvp-node"
+  },
+  "license": "MIT",
+  "keywords": [
+    "node",
+    "glitch",
+    "express"
+  ]
 }

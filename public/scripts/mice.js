@@ -56,11 +56,11 @@ class MouseCursor {
 
     for (let mice of mouseCursors) {
       let otherMice = createVector(mice.x, mice.y);
-      let myMouse = createVector(this.x, this.y); //was mouseX, mouseY
+      let myMouse = createVector(this.x, this.y);
       let distance = otherMice.dist(myMouse);
       let minDistance = 24;
 
-      if (distance < minDistance) {
+      if (distance < minDistance && mice.ID !== this.ID) {
         imBeingBumpedBy = mice.ID;
         this.points++;
         sendPointsData();
@@ -69,12 +69,8 @@ class MouseCursor {
         return;
       } else if (distance > minDistance && this.bump != true) {
         this.userHasControl = false;
-        //this.bump = false; //= false;
       }
     }
-
-    //good for testing;
-    // line(this.x, this.y, mouseX, mouseY);
   }
 
   update() {
@@ -110,6 +106,8 @@ class MouseCursor {
       if (this.bump) {
         //if we're bouncing another mouse, then do this...
         let otherMouse = mouseCursors.find(x => x.ID === imBeingBumpedBy);
+        if (!otherMouse) return;
+        
         let mouseToMoveAway = createVector(otherMouse.x, otherMouse.y);
         let mouseToTarget = createVector(mouseX, mouseY);
 
@@ -123,12 +121,6 @@ class MouseCursor {
         distanceVect.normalize();
         distanceVect.mult(48 * 1.5);
         newVector.sub(distanceVect);
-
-        // push();
-        // textSize(20);
-        // fill("green");
-        // text("newVector", newVector.x, newVector.y);
-        // pop();
 
         let newMousePos = bumpMouse(mouseToTarget, newVector);
         this.x = newMousePos.x;
@@ -156,10 +148,9 @@ class MouseCursor {
           this.y = this.pos.y;
         }
       } else {
-        //if (this.x != mouseX && this.y != mouseY){
         this.target = createVector(mouseX, mouseY);
         let distance = this.target.dist(this.pos);
-        let mappedDistance = map(distance, 100, 0, 25, 0.5);
+        let mappedDistance = map(distance, 100, 0, 25, 0.5); 
 
         this.target.sub(this.pos);
         this.target.normalize();
@@ -167,8 +158,6 @@ class MouseCursor {
         this.pos.add(this.target);
         this.x = this.pos.x;
         this.y = this.pos.y;
-        //}
-
       }
     }
   }
@@ -178,10 +167,6 @@ class MouseCursor {
 
   show() {
     image(this.color, this.x - 5, this.y, 24, 24);
-
-    // Helpful for testing
-    // textSize(10);
-    // text(this.ID, this.x, this.y);
   }
 }
 
@@ -199,6 +184,3 @@ function bumpMouse(mouseToMoveAway, mouseToTarget) {
 
   return mouseToTarget;
 }
-
-//Help with vector math here:
-//https://stackoverflow.com/questions/48250639/making-an-object-move-toward-the-cursor-javascript-p5-js

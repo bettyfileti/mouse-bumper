@@ -23,19 +23,15 @@ io.sockets.on("connection", (socket) => {
         console.log("Client disconnected: " + socket.id);
     });
 
-    //listen for data
+    //listen for cursor position data
     socket.on("data", (data) => {
-        //console.log(data)
-        
         //send to all clients, including myself
         io.sockets.emit("draw-data", data);
-
-        // //send to all clients, except me
-        // socket.broadcast.emit('draw-data', data);
-
-        // //send the data to just this client
-        // socket.emit('data', data);
-
+    });
+    
+    //listen for points data
+    socket.on("points", (data) => {
+        //send to all clients
+        io.sockets.emit("points-data", data);
     });
 });
-

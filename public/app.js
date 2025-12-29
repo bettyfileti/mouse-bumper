@@ -26,6 +26,7 @@ let mouseYellow;
 
 let mouseCursors = [];
 let mouseImages = [];
+let otherPlayers = {}; // Store other players' cursors by socket ID
 
 function preload() {
     mouseAqua = loadImage("assets/cursorAqua.png");
@@ -62,12 +63,19 @@ function setup() {
 }
 
 function draw(){
+    background(220);
     rect(rectCanvas.x, rectCanvas.y, rectCanvas.w, rectCanvas.h);
 
+    // Draw my cursor
     for (let mouse of mouseCursors) {
         mouse.checkControl();
         mouse.update();
         mouse.show();
+    }
+    
+    // Draw other players' cursors
+    for (let id in otherPlayers) {
+        otherPlayers[id].show();
     }
 }
 
@@ -76,6 +84,7 @@ function mouseMoved() {
         "x" : mouseCursors[0].x,
         "y" : mouseCursors[0].y,
         "colorID" : mouseCursors[0].colorID,
+        "socketId": socket.id
     }
     socket.emit("data", dataObj);
 }
@@ -86,7 +95,16 @@ function mouseClicked(){
 
 
 function drawObj(data) {
+    // Don't draw my own cursor from the server
+    if (data.socketId === socket.id) return;
+    
     let colorID = data.colorID;
-    let newMouse = new MouseCursor(data.x, data.y, mouseImages[colorID], colorID);
-    newMouse.show();
+    
+    // Update or create cursor for this player
+    if (otherPlayers[data.socketId]) {
+        otherPlayers[data.socketId].x = data.x;
+        otherPlayers[data.socketId].y = data.y;
+    } else {
+        otherPlayers[data.socketId] = new MouseCursor(data.x, data.y, mouseImages[colorID], colorID);
+    }
 }

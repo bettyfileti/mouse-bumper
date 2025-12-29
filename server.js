@@ -19,7 +19,8 @@ fastify.register(require("@fastify/formbody"));
 fastify.register(require("@fastify/view"), {
   engine: {
     handlebars: require("handlebars")
-  }
+  },
+  root: path.join(__dirname, "src/pages")
 });
 
 // Our main GET home page route, pulls from src/pages/index.hbs
@@ -29,7 +30,7 @@ fastify.get("/", function(request, reply) {
     greeting: "Hello Node!"
   };
   // request.query.paramName <-- a querystring example
-  reply.view("/src/pages/index.hbs", params);
+  reply.view("index.hbs", params);
 });
 
 // A POST route to handle form submissions
@@ -38,7 +39,7 @@ fastify.post("/", function(request, reply) {
     greeting: "Hello Form!"
   };
   // request.body.paramName <-- a form post example
-  reply.view("/src/pages/index.hbs", params);
+  reply.view("index.hbs", params);
 });
 
 // Run the server and report out to the logs
